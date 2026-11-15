@@ -3,9 +3,9 @@
 #   ZMK v0.3 and older     : nice_nano_v2
 # Use whichever your zmk-config template already uses.
 include:
-  - board: nice_nano//zmk
+  - board: nice_nano_v2//zmk
     shield: do52pro_left
-  - board: nice_nano//zmk
+  - board: nice_nano_v2//zmk
     shield: do52pro_right
-  - board: nice_nano//zmk
+  - board: nice_nano_v2//zmk
     shield: settings_reset
