@@ -1,11 +1,7 @@
-# Board name depends on your ZMK version:
-#   ZMK main / pre-release : nice_nano//zmk
-#   ZMK v0.3 and older     : nice_nano_v2
-# Use whichever your zmk-config template already uses.
 include:
-  - board: nrf52840dk_nrf52840//zmk
+  - board: nice_nano_v2
     shield: do52pro_left
-  - board: nrf52840dk_nrf52840//zmk
+  - board: nice_nano_v2
     shield: do52pro_right
-  - board: nrf52840dk_nrf52840//zmk
+  - board: nice_nano_v2
     shield: settings_reset
