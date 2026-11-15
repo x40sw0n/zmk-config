@@ -1,0 +1,17 @@
+#include "do52pro.dtsi"
+
+&default_transform {
+    col-offset = <6>;
+};
+
+/* Column order is mirrored on the right half, as in the QMK port. */
+&kscan0 {
+    col-gpios
+        = <&gpio1 0  GPIO_ACTIVE_HIGH>   /* GP6 / 6   / P1.00 */
+        , <&gpio0 24 GPIO_ACTIVE_HIGH>   /* GP5 / 5   / P0.24 */
+        , <&gpio0 22 GPIO_ACTIVE_HIGH>   /* GP4 / 4   / P0.22 */
+        , <&gpio0 17 GPIO_ACTIVE_HIGH>   /* GP2 / 2   / P0.17 */
+        , <&gpio0 8  GPIO_ACTIVE_HIGH>   /* GP1 / RX1 / P0.08 */
+        , <&gpio0 6  GPIO_ACTIVE_HIGH>   /* GP0 / TX0 / P0.06 */
+        ;
+};

@@ -1,0 +1,82 @@
+/*
+ * do52pro split keyboard, driven by nRF52840 Pro Micro-style controllers
+ * (nice!nano v2 compatible, e.g. "ProMicro NRF52840 V1940").
+ *
+ * The pin map comes from the community QMK port (ilfmoussa/do52pro), which is
+ * reverse engineered and UNVERIFIED. It is translated by *physical position* on
+ * the Pro Micro footprint (assumes the PCB footprint follows the usual Pro Micro
+ * order: TX0, RX1, GND, GND, 2..9 on one side; RAW, GND, RST, VCC, A3..A0 on the other):
+ *
+ *   RP2040    footprint   nRF52840   used for
+ *   GP0       TX0         P0.06      column
+ *   GP1       RX1         P0.08      column
+ *   GP2       2           P0.17      column
+ *   GP3       3           P0.20      (wired split serial, unused)
+ *   GP4       4           P0.22      column
+ *   GP5       5           P0.24      column
+ *   GP6       6           P1.00      column
+ *   GP7       7           P0.11      row
+ *   GP8       8           P1.04      row
+ *   GP9       9           P1.06      row
+ *   GP27      A1          P0.02      row
+ *   GP28      A2          P0.29      row (DPAD)
+ *   GP29      A3          P0.31      row
+ */
+
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,physical-layout = &physical_layout0;
+    };
+
+    physical_layout0: physical_layout_0 {
+        compatible = "zmk,physical-layout";
+        display-name = "Default Layout";
+        kscan = <&kscan0>;
+        transform = <&default_transform>;
+    };
+
+    /*
+     * 6 rows x 12 columns (left half = columns 0-5, right half = columns 6-11).
+     * Row 5 is the DPAD row. Bottom-row positions 2/3 (and 8/9) have no switch.
+     * Key position order (this is the order of the bindings in the keymap):
+     *   0-47   rows 0-3, left to right
+     *   48-55  bottom row (8 keys)
+     *   56-59  left DPAD, 60-63 right DPAD
+     * DPAD column assignments are copied from the QMK README - VERIFY on hardware.
+     */
+    default_transform: keymap_transform0 {
+        compatible = "zmk,matrix-transform";
+        columns = <12>;
+        rows = <6>;
+        map = <
+        RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)    RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11)
+        RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)    RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11)
+        RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)    RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11)
+        RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)    RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11)
+        RC(4,0)  RC(4,1)  RC(4,4)  RC(4,5)                      RC(4,6)  RC(4,7)  RC(4,10) RC(4,11)
+        // left DPAD:  HOME     PGUP     PGDN     END
+        RC(5,5)  RC(5,1)  RC(5,3)  RC(5,4)
+        // right DPAD: LEFT     RIGHT    DOWN     UP
+        RC(5,7)  RC(5,6)  RC(5,8)  RC(5,9)
+        >;
+    };
+
+    kscan0: kscan0 {
+        compatible = "zmk,kscan-gpio-matrix";
+        diode-direction = "col2row";
+        wakeup-source;
+
+        /* Same on both halves. Column pins are set in the left/right overlays. */
+        row-gpios
+            = <&gpio0 2  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP27 / A1 / P0.02 */
+            , <&gpio1 4  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP8  / 8  / P1.04 */
+            , <&gpio1 6  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP9  / 9  / P1.06 */
+            , <&gpio0 31 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP29 / A3 / P0.31 */
+            , <&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP7  / 7  / P0.11 */
+            , <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   /* GP28 / A2 / P0.29 (DPAD) */
+            ;
+    };
+};
